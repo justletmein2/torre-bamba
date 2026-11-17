@@ -17,7 +17,8 @@
   <div id="hud" hidden>
     <div id="hudEsq">
       <div id="vidas"></div>
-      <div id="proxima"><span class="rot">PRÓXIMA</span><canvas id="previa" width="80" height="60"></canvas></div>
+      <div id="proxima"><span class="rot">PRÓXIMA</span><canvas id="previa" width="80" height="60"></canvas><span id="previaMod" class="rot"></span></div>
+      <button id="btnSairJogo" aria-label="Sair da partida">✕ sair</button>
     </div>
     <div id="rivais"></div>
     <div id="aviso" hidden></div>
@@ -33,15 +34,28 @@
 
   <!-- INÍCIO -->
   <section id="telaInicio" class="tela">
-    <div class="caixa">
+    <div class="menu">
+      <div class="logo" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i></div>
       <h1>TORRE<br><span>BAMBA</span></h1>
-      <div id="eu" class="eu"></div>
+      <p class="lema">Empilhe, equilibre e chegue na linha antes de todo mundo!</p>
+      <div id="eu" class="eu" hidden></div>
       <input id="nome" placeholder="Seu nome" maxlength="14" autocomplete="off" hidden>
-      <button id="btnCriar" class="grande">🏗️ Criar sala e chamar alguém</button>
-      <div class="entrar"><input id="codigo" placeholder="CÓDIGO" maxlength="4" autocomplete="off" autocapitalize="characters"><button id="btnEntrar" class="sec">Entrar</button></div>
-      <button id="btnSolo" class="grande verde">🧱 Treinar sozinho</button>
-      <button id="btnComo" class="sec">❓ Como jogar</button>
-      <p class="peq"><a href="../" class="link">← outros jogos</a></p>
+      <div class="bloco">
+        <div class="rot2">👯 JOGAR COM AMIGOS</div>
+        <button id="btnCriar" class="grande">🏗️ Criar sala</button>
+        <div class="entrar"><input id="codigo" placeholder="CÓDIGO" maxlength="4" autocomplete="off" autocapitalize="characters"><button id="btnEntrar" class="sec">Entrar</button></div>
+        <p id="notaPrevia" class="peq" hidden>Na prévia só dá pra treinar sozinho.</p>
+      </div>
+      <div class="bloco">
+        <div class="rot2">🧱 SOZINHO</div>
+        <button id="btnSolo" class="grande verde">Treinar</button>
+      </div>
+      <div class="fileira">
+        <button id="btnComo" class="sec">❓ Como jogar</button>
+        <button id="btnMusica" class="sec">🎵 Música</button>
+        <button id="btnTema" class="sec">🌙 Escuro</button>
+      </div>
+      <p class="peq"><a id="linkPortal" href="../" class="link">← outros jogos</a></p>
     </div>
   </section>
 
@@ -52,6 +66,7 @@
       <p>As peças caem do céu. Empilhe e monte uma torre até passar a <b>linha de chegada 🏁</b>.</p>
       <p>Quem segurar a torre acima da linha por <b>3 segundos</b> ganha.</p>
       <p>Mas tem física: a torre <b>balança</b> e pode desabar! Peça que cai não elimina ninguém, só te atrasa.</p>
+      <p>De vez em quando vem uma ajuda:<br>🪨 <b>Pedra</b>: fica presa onde encostar, não cai mais.<br>🌿 <b>Planta</b>: gruda na peça que encostar e as duas viram uma só.</p>
       <p class="peq">◀ ▶ mexe · ⟳ gira · ⬇ desce rápido<br>No computador: setas, espaço gira.</p>
       <button id="btnComoOk" class="grande">Bora!</button>
     </div>

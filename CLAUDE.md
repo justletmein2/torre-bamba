@@ -25,3 +25,10 @@
 - Sirva uma pasta com `torre-bamba/` (= public) e `forma-palavras/` (= public do outro repo)
   lado a lado e abra `torre-bamba/index.html?local=1` em duas abas (cada aba é um jogador).
 - `?local=1&linha=4` deixa a chegada baixinha pra testar a vitória rápido.
+
+## Detalhes do jogo
+
+- Ajudas: a 3ª, 7ª, 11ª... peça vem com 🪨 pedra (fica presa onde encostar) ou 🌿 planta
+  (vira um corpo só com a peça em que encostar). O sorteio sai da semente, igual pra todos.
+- Peça caída não elimina ninguém. Tema claro/escuro usa a mesma chave do Forma Palavras (`cp_tema`).
+- Fora do github.io (ex.: prévia como artefato do Claude) o jogo entra em modo "prévia": só treino.

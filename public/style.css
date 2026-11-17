@@ -11,8 +11,7 @@ body { touch-action: manipulation; user-select: none; -webkit-user-select: none;
 [hidden] { display: none !important; }
 
 /* telas */
-.tela { position: absolute; inset: 0; display: grid; place-items: center; padding: 16px;
-  background: linear-gradient(160deg, #6a4be0 0%, #3b2a8f 55%, #2a1b5e 100%); overflow-y: auto; }
+.tela { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; padding: 16px; overflow-y: auto; overflow-x: hidden; }
 .caixa { width: min(380px, 100%); background: #fff; border-radius: 22px; padding: 22px 20px;
   box-shadow: 0 8px 0 rgba(0,0,0,.25); display: flex; flex-direction: column; gap: 12px; text-align: center; }
 h1 { margin: 0; font-size: 40px; line-height: .95; color: var(--roxo); letter-spacing: 1px;
@@ -57,7 +56,7 @@ input { font: inherit; font-size: 17px; padding: 11px; border-radius: 12px; bord
 .rival .nm { max-width: 56px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rival.fora { opacity: .45; }
 #aviso { position: absolute; left: 50%; top: 30%; transform: translateX(-50%); background: var(--amarelo); color: var(--tinta);
-  font-weight: 900; font-size: 22px; padding: 10px 18px; border-radius: 16px; box-shadow: 0 5px 0 rgba(0,0,0,.25); white-space: nowrap; }
+  font-weight: 900; font-size: 18px; padding: 10px 16px; border-radius: 16px; box-shadow: 0 5px 0 rgba(0,0,0,.25); width: max-content; max-width: 88vw; text-align: center; }
 #contagem { position: absolute; inset: 0; display: grid; place-items: center; font-size: 110px; font-weight: 900; color: #fff;
   text-shadow: 0 6px 0 var(--roxo-esc); }
 
@@ -72,3 +71,43 @@ input { font: inherit; font-size: 17px; padding: 11px; border-radius: 12px; bord
 
 #toast { position: absolute; left: 50%; bottom: 110px; transform: translateX(-50%); background: var(--tinta); color: #fff;
   padding: 10px 16px; border-radius: 14px; font-weight: 700; max-width: 90vw; text-align: center; z-index: 10; }
+
+/* ---------- menu principal ---------- */
+.menu { width: min(360px, 100%); display: flex; flex-direction: column; gap: 12px; text-align: center; padding: 8px 0; }
+.menu h1 { color: #fff; text-shadow: 3px 3px 0 var(--rosa), 0 8px 0 rgba(0,0,0,.25); font-size: 46px; margin-top: -4px; }
+.menu h1 span { color: var(--amarelo); text-shadow: 3px 3px 0 var(--roxo-esc); }
+.lema { color: #fff; font-weight: 700; opacity: .9; font-size: 14px; }
+.logo { height: 74px; position: relative; width: 120px; margin: 0 auto; animation: bamba 3s ease-in-out infinite; transform-origin: 50% 100%; }
+.logo i { position: absolute; width: 34px; height: 34px; border-radius: 8px; box-shadow: inset 0 -5px 0 rgba(0,0,0,.18), inset 0 5px 0 rgba(255,255,255,.3); }
+.logo .b1 { background: #3ad1ff; left: 26px; bottom: 0; } .logo .b2 { background: #ff5f6d; left: 60px; bottom: 0; }
+.logo .b3 { background: #ffd23f; left: 43px; bottom: 34px; transform: rotate(-6deg); } .logo .b4 { background: #4cdb7a; left: 52px; bottom: 66px; transform: rotate(9deg); width: 26px; height: 26px; }
+.bloco { background: rgba(255,255,255,.95); border-radius: 20px; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 6px 0 rgba(0,0,0,.25); }
+.rot2 { font-size: 12px; font-weight: 900; letter-spacing: 1.5px; color: var(--roxo); text-align: left; }
+.fileira { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.fileira .sec { padding: 10px 4px; font-size: 13px; background: rgba(255,255,255,.92); box-shadow: 0 4px 0 rgba(0,0,0,.25); }
+.menu .peq, .menu .link { color: #fff; }
+.menu .bloco .peq { color: var(--tinta); }
+.menu .eu { background: rgba(255,255,255,.16); border-radius: 16px; padding: 6px 12px; color: #fff; justify-content: flex-start; text-align: left; min-height: 0; }
+.menu .eu .rosto { width: 56px; height: 56px; display: grid; place-items: center; font-size: 34px; }
+.menu .eu small { display: block; font-weight: 700; font-size: 12px; opacity: .8; }
+#btnSairJogo { pointer-events: auto; background: rgba(255,255,255,.7); color: var(--roxo); font-weight: 800; font-size: 12px; border-radius: 10px; padding: 5px 8px; }
+#previaMod { min-height: 12px; }
+
+/* ---------- tema escuro ---------- */
+[data-tema="escuro"] body { background: #0d0a26; }
+[data-tema="escuro"] .caixa, [data-tema="escuro"] .bloco { background: #251b52; color: #f1edff; }
+[data-tema="escuro"] h2, [data-tema="escuro"] .rot2, [data-tema="escuro"] .caixa .link { color: #c9b8ff; }
+[data-tema="escuro"] .menu .bloco .peq { color: #f1edff; }
+[data-tema="escuro"] .sec { background: #3a2c78; color: #f1edff; box-shadow: 0 4px 0 #1a1340; }
+[data-tema="escuro"] .fileira .sec { background: #3a2c78; }
+[data-tema="escuro"] input { background: #1a1340; color: #fff; border-color: #4b3a99; }
+[data-tema="escuro"] .jog { background: #32266b; color: #f1edff; }
+[data-tema="escuro"] .jog.vence { background: #6b5a14; }
+[data-tema="escuro"] #proxima, [data-tema="escuro"] .rival { background: rgba(37,27,82,.88); color: #f1edff; }
+[data-tema="escuro"] .rot { color: #c9b8ff; }
+[data-tema="escuro"] .ctl { background: rgba(58,44,120,.95); color: #fff; }
+[data-tema="escuro"] .ctl.gira { background: #b8901a; color: #fff; }
+[data-tema="escuro"] .ctl.desce { background: #1f6b47; color: #fff; }
+[data-tema="escuro"] #btnSairJogo { background: rgba(58,44,120,.85); color: #fff; }
+.menu input, .menu button { max-width: 100%; }
+.menu > input { width: 100%; }
