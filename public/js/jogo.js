@@ -356,7 +356,7 @@ let escala = 1, ox = 0, oy = 0;
 function ajustarTela() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   tela.width = innerWidth * dpr; tela.height = innerHeight * dpr;
-  const ctl = 96, topoLivre = 8;
+  const ctl = 104, topoLivre = 8;
   const disp = innerHeight - ctl - topoLivre;
   escala = Math.min(innerWidth / W, disp / H) * dpr;
   ox = (tela.width - W * escala) / 2;

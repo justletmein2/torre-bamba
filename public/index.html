@@ -26,10 +26,14 @@
   </div>
 
   <div id="controles" hidden>
-    <button id="bEsq" class="ctl" aria-label="Esquerda">◀</button>
-    <button id="bGira" class="ctl gira" aria-label="Girar">⟳</button>
-    <button id="bDesce" class="ctl desce" aria-label="Descer rápido">⬇</button>
-    <button id="bDir" class="ctl" aria-label="Direita">▶</button>
+    <div class="grupo">
+      <button id="bEsq" class="ctl lado" aria-label="Esquerda"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M30 9 L13 24 L30 39 Z" fill="currentColor" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/></svg></button>
+      <button id="bDir" class="ctl lado" aria-label="Direita"><svg viewBox="0 0 48 48" aria-hidden="true"><g transform="translate(48 0) scale(-1 1)"><path d="M30 9 L13 24 L30 39 Z" fill="currentColor" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/></g></svg></button>
+    </div>
+    <div class="grupo">
+      <button id="bDesce" class="ctl desce" aria-label="Descer rápido"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 7 V30" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><path d="M11 24 L24 39 L37 24" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg><small>descer</small></button>
+      <button id="bGira" class="ctl gira" aria-label="Girar"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M38 24 A14 14 0 1 1 31 11.9" fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round"/><path d="M27 4 L37 12.5 L26 18 Z" fill="currentColor" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></svg><small>girar</small></button>
+    </div>
   </div>
 
   <!-- INÍCIO -->

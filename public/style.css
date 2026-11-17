@@ -55,19 +55,30 @@ input { font: inherit; font-size: 17px; padding: 11px; border-radius: 12px; bord
 .rival canvas { width: 50px; height: 115px; border-radius: 8px; }
 .rival .nm { max-width: 56px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rival.fora { opacity: .45; }
-#aviso { position: absolute; left: 50%; top: 30%; transform: translateX(-50%); background: var(--amarelo); color: var(--tinta);
+#aviso { position: absolute; left: 50%; bottom: 122px; transform: translateX(-50%); background: var(--amarelo); color: var(--tinta);
   font-weight: 900; font-size: 18px; padding: 10px 16px; border-radius: 16px; box-shadow: 0 5px 0 rgba(0,0,0,.25); width: max-content; max-width: 88vw; text-align: center; }
 #contagem { position: absolute; inset: 0; display: grid; place-items: center; font-size: 110px; font-weight: 900; color: #fff;
   text-shadow: 0 6px 0 var(--roxo-esc); }
 
 /* controles */
-#controles { position: absolute; left: 0; right: 0; bottom: 0; padding: 8px 10px max(10px, env(safe-area-inset-bottom));
-  display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
-.ctl { height: 72px; border-radius: 18px; background: rgba(255,255,255,.92); color: var(--roxo); font-size: 32px; font-weight: 900;
-  box-shadow: 0 5px 0 rgba(0,0,0,.28); touch-action: none; }
-.ctl.gira { background: var(--amarelo); color: var(--tinta); }
-.ctl.desce { background: #c9f2dd; color: #13643a; }
-.ctl.on { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,.28); }
+#controles { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 12px max(12px, env(safe-area-inset-bottom));
+  display: flex; justify-content: space-between; gap: 14px;
+  background: linear-gradient(to top, rgba(24,14,60,.92) 55%, rgba(24,14,60,0)); }
+.grupo { display: flex; gap: 10px; flex: 1; }
+.ctl { --c1: #8f73ff; --c2: #5b3cc4; --c3: #3a2390; flex: 1; height: 74px; border-radius: 22px; position: relative; color: #fff;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; touch-action: none;
+  background: linear-gradient(180deg, var(--c1), var(--c2)); border: 2px solid rgba(255,255,255,.28);
+  box-shadow: 0 6px 0 var(--c3), 0 10px 14px rgba(0,0,0,.35), inset 0 2px 0 rgba(255,255,255,.45), inset 0 -6px 10px rgba(0,0,0,.14);
+  transition: transform .06s, box-shadow .06s, filter .06s; }
+.ctl::before { content: ''; position: absolute; left: 10%; right: 10%; top: 6px; height: 30%; border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,.38), rgba(255,255,255,0)); pointer-events: none; }
+.ctl svg { width: 36px; height: 36px; filter: drop-shadow(0 2px 0 rgba(0,0,0,.25)); pointer-events: none; }
+.ctl small { font-size: 10px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; opacity: .9; margin-top: -3px; pointer-events: none; }
+.ctl.gira { --c1: #ffe476; --c2: #ffb800; --c3: #b37600; color: #4a2c00; }
+.ctl.gira svg { filter: drop-shadow(0 2px 0 rgba(255,255,255,.4)); }
+.ctl.desce { --c1: #5ee6a0; --c2: #1fae66; --c3: #0f6e3d; }
+.ctl.on { transform: translateY(5px); filter: brightness(1.08);
+  box-shadow: 0 1px 0 var(--c3), 0 3px 6px rgba(0,0,0,.35), inset 0 2px 0 rgba(255,255,255,.3), inset 0 -3px 8px rgba(0,0,0,.18); }
 
 #toast { position: absolute; left: 50%; bottom: 110px; transform: translateX(-50%); background: var(--tinta); color: #fff;
   padding: 10px 16px; border-radius: 14px; font-weight: 700; max-width: 90vw; text-align: center; z-index: 10; }
@@ -105,9 +116,13 @@ input { font: inherit; font-size: 17px; padding: 11px; border-radius: 12px; bord
 [data-tema="escuro"] .jog.vence { background: #6b5a14; }
 [data-tema="escuro"] #proxima, [data-tema="escuro"] .rival { background: rgba(37,27,82,.88); color: #f1edff; }
 [data-tema="escuro"] .rot { color: #c9b8ff; }
-[data-tema="escuro"] .ctl { background: rgba(58,44,120,.95); color: #fff; }
-[data-tema="escuro"] .ctl.gira { background: #b8901a; color: #fff; }
-[data-tema="escuro"] .ctl.desce { background: #1f6b47; color: #fff; }
 [data-tema="escuro"] #btnSairJogo { background: rgba(58,44,120,.85); color: #fff; }
 .menu input, .menu button { max-width: 100%; }
 .menu > input { width: 100%; }
+[data-tema="escuro"] .ctl { --c1: #6f58d6; --c2: #43309c; --c3: #261a66; border-color: rgba(255,255,255,.16); }
+[data-tema="escuro"] .ctl.gira { --c1: #f0c94a; --c2: #d99a00; --c3: #8a5d00; }
+[data-tema="escuro"] .ctl.desce { --c1: #45c987; --c2: #178a50; --c3: #0b5730; }
+/* painel do jogo com o mesmo acabamento */
+#proxima { border-radius: 16px; padding: 6px 8px; box-shadow: 0 4px 0 rgba(0,0,0,.22); border: 2px solid rgba(255,255,255,.5); }
+#btnSairJogo { border-radius: 12px; padding: 6px 10px; box-shadow: 0 3px 0 rgba(0,0,0,.22); }
+#vidas { color: #fff; font-weight: 900; font-size: 18px; text-shadow: 0 2px 0 rgba(0,0,0,.35); min-height: 22px; }
