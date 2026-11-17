@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#2a1b5e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Torre Bamba</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="palco">
+  <canvas id="tela"></canvas>
+
+  <!-- painel durante a partida -->
+  <div id="hud" hidden>
+    <div id="hudEsq">
+      <div id="vidas"></div>
+      <div id="proxima"><span class="rot">PRÓXIMA</span><canvas id="previa" width="80" height="60"></canvas></div>
+    </div>
+    <div id="rivais"></div>
+    <div id="aviso" hidden></div>
+    <div id="contagem" hidden></div>
+  </div>
+
+  <div id="controles" hidden>
+    <button id="bEsq" class="ctl" aria-label="Esquerda">◀</button>
+    <button id="bGira" class="ctl gira" aria-label="Girar">⟳</button>
+    <button id="bDesce" class="ctl desce" aria-label="Descer rápido">⬇</button>
+    <button id="bDir" class="ctl" aria-label="Direita">▶</button>
+  </div>
+
+  <!-- INÍCIO -->
+  <section id="telaInicio" class="tela">
+    <div class="caixa">
+      <h1>TORRE<br><span>BAMBA</span></h1>
+      <div id="eu" class="eu"></div>
+      <input id="nome" placeholder="Seu nome" maxlength="14" autocomplete="off" hidden>
+      <button id="btnCriar" class="grande">🏗️ Criar sala e chamar alguém</button>
+      <div class="entrar"><input id="codigo" placeholder="CÓDIGO" maxlength="4" autocomplete="off" autocapitalize="characters"><button id="btnEntrar" class="sec">Entrar</button></div>
+      <button id="btnSolo" class="grande verde">🧱 Treinar sozinho</button>
+      <button id="btnComo" class="sec">❓ Como jogar</button>
+      <p class="peq"><a href="../" class="link">← outros jogos</a></p>
+    </div>
+  </section>
+
+  <!-- COMO JOGAR -->
+  <section id="telaComo" class="tela" hidden>
+    <div class="caixa">
+      <h2>Como jogar</h2>
+      <p>As peças caem do céu. Empilhe e monte uma torre até passar a <b>linha de chegada 🏁</b>.</p>
+      <p>Quem segurar a torre acima da linha por <b>3 segundos</b> ganha.</p>
+      <p>Mas tem física: a torre <b>balança</b> e pode desabar! Peça que cai não elimina ninguém, só te atrasa.</p>
+      <p class="peq">◀ ▶ mexe · ⟳ gira · ⬇ desce rápido<br>No computador: setas, espaço gira.</p>
+      <button id="btnComoOk" class="grande">Bora!</button>
+    </div>
+  </section>
+
+  <!-- SALA -->
+  <section id="telaSala" class="tela" hidden>
+    <div class="caixa">
+      <h2>Sala <span id="salaCodigo" class="codigo"></span></h2>
+      <button id="btnCopiar" class="sec">📋 Copiar convite</button>
+      <div id="listaJog" class="lista"></div>
+      <button id="btnComecar" class="grande" hidden>▶ Começar</button>
+      <p id="salaEspera" class="peq" hidden>Esperando quem criou a sala começar…</p>
+      <button id="btnSairSala" class="link">Sair da sala</button>
+    </div>
+  </section>
+
+  <!-- FIM -->
+  <section id="telaFim" class="tela" hidden>
+    <div class="caixa">
+      <h2 id="fimTitulo"></h2>
+      <div id="fimLista" class="lista"></div>
+      <button id="btnDeNovo" class="grande">🔁 Jogar de novo</button>
+      <p id="fimEspera" class="peq" hidden>Esperando quem criou a sala…</p>
+      <button id="btnFimSair" class="link">Sair</button>
+    </div>
+  </section>
+
+  <div id="toast" hidden></div>
+</div>
+<script src="js/vendor/matter.min.js"></script>
+<script type="module" src="js/jogo.js"></script>
+</body>
+</html>
