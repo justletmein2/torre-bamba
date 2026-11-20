@@ -19,6 +19,9 @@ const CHAO = H - 1.2 * CEL;     // topo da plataforma
 const BASE_L = 4.5 * CEL;       // largura da plataforma
 const SEGURAR = 3000;
 const QUEDA = 1.6 * CEL, QUEDA_RAPIDA = 11 * CEL; // px por segundo
+// física: gravidade mais forte (o padrão deixa tudo "flutuando") e passos menores (menos tremedeira)
+const GRAVIDADE = 0.0019, SUBPASSOS = 3;
+const INERCIA = 1.6; // >1 = peça mais "pesada" pra tombar/girar
 
 const PECAS = {
   I: { c: [[0, 0], [1, 0], [2, 0], [3, 0]], cor: '#3ad1ff' },
@@ -142,8 +145,8 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) parar
 // ---------- uma partida ----------
 // online: { semente, inicio (horário do servidor), ids: quem joga }
 function novaPartida({ semente, inicio, online, ids }) {
-  const engine = Engine.create({ enableSleeping: true, positionIterations: 10, velocityIterations: 8 });
-  engine.gravity.y = 1;
+  const engine = Engine.create({ enableSleeping: true, positionIterations: 24, velocityIterations: 18, constraintIterations: 4 });
+  engine.gravity.y = 1; engine.gravity.scale = GRAVIDADE;
   const base = Bodies.rectangle(W / 2, CHAO + CEL * 0.6, BASE_L, CEL * 1.2, { isStatic: true, friction: 1, label: 'base' });
   Composite.add(engine.world, base);
   const prox = sorteador(semente);
@@ -161,6 +164,7 @@ function criarPeca(tipo) {
   const def = PECAS[tipo];
   const partes = def.c.map(([x, y]) => Bodies.rectangle(x * CEL + CEL / 2, y * CEL + CEL / 2, CEL, CEL));
   const corpo = Body.create({ parts: partes, ...MATERIAL });
+  acertarInercia(corpo);
   // posição de cada quadradinho em relação ao centro da peça (pra desenhar e pro "retrato")
   const off = def.c.map(([x, y]) => [x * CEL + CEL / 2 - corpo.position.x, y * CEL + CEL / 2 - corpo.position.y]);
   corpo.tb = { tipo, off, nasceu: 0, membros: [{ tipo, mod: null, dx: 0, dy: 0, da: 0 }] };
@@ -219,17 +223,35 @@ function girar() {
   volta();
 }
 
+// A biblioteca de física soma a inércia de cada quadradinho como se ele girasse sozinho
+// (ignora a distância até o centro da peça). Resultado: peças de 4 blocos giravam como se
+// pesassem ~10x menos. Aqui a inércia é recalculada direito (teorema dos eixos paralelos).
+function acertarInercia(corpo, pedra = false) {
+  if (pedra) { Body.setInertia(corpo, Infinity); return; } // pedra não gira
+  const partes = corpo.parts.length > 1 ? corpo.parts.slice(1) : [corpo];
+  const m = corpo.mass / partes.length;
+  let I = 0;
+  for (const p of partes) {
+    const dx = p.position.x - corpo.position.x, dy = p.position.y - corpo.position.y;
+    I += m * (CEL * CEL) / 6 + m * (dx * dx + dy * dy);
+  }
+  Body.setInertia(corpo, I * 4 * INERCIA); // x4 = mesma escala que a biblioteca usa internamente
+}
+
 // solta a peça na física quando ela encosta na torre
-const MATERIAL = { friction: 1, frictionStatic: 2.2, restitution: 0, frictionAir: 0.022, density: 0.0015 };
+const MATERIAL = { friction: 1, frictionStatic: 4, restitution: 0, frictionAir: 0.03, density: 0.002, slop: 0.02 };
+const PEDRA = { friction: 1, frictionStatic: 12, restitution: 0, frictionAir: 0.05, density: 0.006, slop: 0.02 };
 function soltar(alvo) {
   let p = J.ativa; J.ativa = null;
   const mod = p.tb.mod;
-  if (mod === 'planta' && alvo && alvo.label !== 'base' && !alvo.isStatic) { p = juntar(p, alvo); som.planta(); }
+  if (mod === 'planta' && alvo && alvo.label !== 'base') { p = juntar(p, alvo); som.planta(); }
   else {
+    if (mod === 'pedra') {
+      // pedra: pesada, não gira e quase não escorrega (mas cai se tirarem o apoio de baixo)
+      Body.set(p, PEDRA); Body.setMass(p, p.area * PEDRA.density); acertarInercia(p, true); som.pedra();
+    } else som.pousa();
     Composite.add(J.engine.world, p);
-    // pedra não sai mais do lugar (e planta que encosta numa pedra fica presa nela)
-    if (mod === 'pedra' || (mod === 'planta' && alvo && alvo.label !== 'base')) { Body.setStatic(p, true); mod === 'pedra' ? som.pedra() : som.planta(); }
-    else { Body.setVelocity(p, { x: 0, y: (J.desce ? QUEDA_RAPIDA * 0.5 : QUEDA) / 60 }); som.pousa(); }
+    Body.setVelocity(p, { x: 0, y: 0.5 }); // encosta de leve: nada de "quicar"
     J.pecas.push(p);
   }
   p.tb.nasceu = performance.now(); J.n++;
@@ -244,9 +266,13 @@ function juntar(a, b) {
     membros.push({ tipo: m.tipo, mod: m.mod, wx, wy, wa });
     for (const [ox2, oy2] of offsetsDe(m.tipo)) { const [qx, qy] = girado(ox2, oy2, wa); partes.push(Bodies.rectangle(wx + qx, wy + qy, CEL, CEL, { angle: wa })); }
   }
-  const novo = Body.create({ parts: partes, ...MATERIAL });
+  const temPedra = membros.some(m => m.mod === 'pedra');
+  const novo = Body.create({ parts: partes, ...(temPedra ? PEDRA : MATERIAL) });
+  acertarInercia(novo, temPedra);
   novo.tb = { tipo: null, mod: null, nasceu: 0, membros: membros.map(m => ({ tipo: m.tipo, mod: m.mod, dx: m.wx - novo.position.x, dy: m.wy - novo.position.y, da: m.wa })) };
-  Body.setVelocity(novo, { x: b.velocity.x, y: b.velocity.y }); Body.setAngularVelocity(novo, b.angularVelocity);
+  // herda o movimento da peça da torre, mas sem giro brusco
+  Body.setVelocity(novo, { x: b.velocity.x * 0.5, y: Math.max(0, b.velocity.y * 0.5) }); Body.setAngularVelocity(novo, 0);
+  if (b.isStatic) Body.setStatic(novo, true);
   Composite.remove(J.engine.world, b);
   Composite.add(J.engine.world, novo);
   J.pecas[J.pecas.indexOf(b)] = novo;
@@ -292,12 +318,22 @@ function passo(dt) {
         // só raspou numa quina? escorrega pro lado e continua no controle
         const x = p.position.x; let passou = false;
         for (const d of [-3, 3, -6, 6]) { Body.setPosition(p, { x: x + d, y: y + v }); if (!bate(p)) { passou = true; break; } }
-        if (!passou) { Body.setPosition(p, { x, y }); soltar(alvo); }
+        if (!passou) {
+          // encosta de verdade: desce de 1 em 1 px até o limite (sem vão pra peça cair e quicar)
+          let yy = y; Body.setPosition(p, { x, y });
+          while (yy + 1 < y + v) { Body.setPosition(p, { x, y: yy + 1 }); if (bate(p)) { Body.setPosition(p, { x, y: yy }); break; } yy++; }
+          soltar(alvo);
+        }
       }
       else if (p.bounds.min.y > H + CEL) { J.ativa = null; perdeuPeca(); proximaPeca(); }
       }
     }
-    Engine.update(J.engine, ms);
+    for (let k = 0; k < SUBPASSOS; k++) Engine.update(J.engine, ms / SUBPASSOS);
+    // amortece giro e tremidinhas pequenas (deixa a torre menos "nervosa")
+    for (const p of J.pecas) {
+      if (p.isStatic || p.isSleeping) continue;
+      if (Math.abs(p.angularVelocity) < 0.03) Body.setAngularVelocity(p, p.angularVelocity * 0.9);
+    }
   }
   // peças que caíram da plataforma
   for (const p of [...J.pecas]) {
