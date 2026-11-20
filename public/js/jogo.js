@@ -21,7 +21,7 @@ const SEGURAR = 3000;
 const QUEDA = 1.6 * CEL, QUEDA_RAPIDA = 11 * CEL; // px por segundo
 // física: gravidade mais forte (o padrão deixa tudo "flutuando") e passos menores (menos tremedeira)
 const GRAVIDADE = 0.0019, SUBPASSOS = 3;
-const INERCIA = 1.25; // >1 = peça mais "pesada" pra tombar/girar (1.6 ficou fácil demais)
+const INERCIA = 1.05; // >1 = peça mais "pesada" pra tombar/girar. Escala do Lucas (0 = voa, 100 = Tetris): 1.6 ≈ 65, 1.25 ≈ 60, agora ≈ 53
 
 const PECAS = {
   I: { c: [[0, 0], [1, 0], [2, 0], [3, 0]], cor: '#3ad1ff' },
@@ -239,7 +239,7 @@ function acertarInercia(corpo, pedra = false) {
 }
 
 // solta a peça na física quando ela encosta na torre
-const MATERIAL = { friction: 1, frictionStatic: 4, restitution: 0, frictionAir: 0.03, density: 0.002, slop: 0.02 };
+const MATERIAL = { friction: 1, frictionStatic: 2.6, restitution: 0, frictionAir: 0.03, density: 0.002, slop: 0.02 };
 const PEDRA = { friction: 1, frictionStatic: 12, restitution: 0, frictionAir: 0.05, density: 0.006, slop: 0.02 };
 function soltar(alvo) {
   let p = J.ativa; J.ativa = null;
@@ -329,7 +329,7 @@ function passo(dt) {
     // amortece giro e tremidinhas pequenas (deixa a torre menos "nervosa")
     for (const p of J.pecas) {
       if (p.isStatic || p.isSleeping) continue;
-      if (Math.abs(p.angularVelocity) < 0.02) Body.setAngularVelocity(p, p.angularVelocity * 0.93);
+      if (Math.abs(p.angularVelocity) < 0.015) Body.setAngularVelocity(p, p.angularVelocity * 0.95);
     }
   }
   // peças que caíram da plataforma
