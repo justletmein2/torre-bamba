@@ -248,7 +248,7 @@ function soltar(alvo) {
   else {
     Composite.add(J.engine.world, p);
     if (mod === 'pedra') { Body.setStatic(p, true); som.pedra(); } // pedra: fica presa exatamente onde encostou
-    else { Body.setVelocity(p, { x: 0, y: 0.5 }); som.pousa(); }    // encosta de leve: nada de "quicar"
+    else { Body.setVelocity(p, { x: 0, y: 0.5 }); Body.setAngularVelocity(p, (Math.random() - 0.5) * 0.003); som.pousa(); } // encosta de leve, sem quicar
     J.pecas.push(p);
   }
   p.tb.nasceu = performance.now(); J.n++;
@@ -326,10 +326,12 @@ function passo(dt) {
       }
     }
     for (let k = 0; k < SUBPASSOS; k++) Engine.update(J.engine, ms / SUBPASSOS);
-    // amortece giro e tremidinhas pequenas (deixa a torre menos "nervosa")
+    // "modo descanso" da física: só deixa a peça congelar se ela já assentou de verdade.
+    // (antes uma peça que começava a tombar devagar era congelada no meio da queda)
+    const agoraD = performance.now();
     for (const p of J.pecas) {
       if (p.isStatic || p.isSleeping) continue;
-      if (Math.abs(p.angularVelocity) < 0.015) Body.setAngularVelocity(p, p.angularVelocity * 0.95);
+      if (agoraD - p.tb.nasceu < 2500 || Math.abs(p.angularVelocity) > 0.0012) p.sleepCounter = 0;
     }
   }
   // peças que caíram da plataforma
@@ -800,3 +802,12 @@ iniciar();
 
 // pra testes automáticos
 window.__tb = { get J() { return J; }, M, mover, girar, desce, CEL, LINHA, Body };
+// teste: põe uma peça já pousada (tipo, giros de 90°, deslocamento x em quadradinhos) e devolve o corpo
+if (rede.LOCAL) window.__tb.testePeca = (tipo, giros = 0, dx = 0) => {
+  const p = criarPeca(tipo); p.tb.membros[0].mod = null;
+  Body.setAngle(p, giros * Math.PI / 2);
+  const topo = Math.min(CHAO, ...J.pecas.map(q => q.bounds.min.y));
+  Body.setPosition(p, { x: W / 2 + dx * CEL, y: topo - (p.bounds.max.y - p.position.y) - 1 });
+  Composite.add(J.engine.world, p); Body.setVelocity(p, { x: 0, y: 0.5 });
+  p.tb.nasceu = performance.now(); J.pecas.push(p); return J.pecas.length - 1;
+};
