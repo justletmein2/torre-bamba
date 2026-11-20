@@ -246,12 +246,9 @@ function soltar(alvo) {
   const mod = p.tb.mod;
   if (mod === 'planta' && alvo && alvo.label !== 'base') { p = juntar(p, alvo); som.planta(); }
   else {
-    if (mod === 'pedra') {
-      // pedra: pesada, não gira e quase não escorrega (mas cai se tirarem o apoio de baixo)
-      Body.set(p, PEDRA); Body.setMass(p, p.area * PEDRA.density); acertarInercia(p, true); som.pedra();
-    } else som.pousa();
     Composite.add(J.engine.world, p);
-    Body.setVelocity(p, { x: 0, y: 0.5 }); // encosta de leve: nada de "quicar"
+    if (mod === 'pedra') { Body.setStatic(p, true); som.pedra(); } // pedra: fica presa exatamente onde encostou
+    else { Body.setVelocity(p, { x: 0, y: 0.5 }); som.pousa(); }    // encosta de leve: nada de "quicar"
     J.pecas.push(p);
   }
   p.tb.nasceu = performance.now(); J.n++;

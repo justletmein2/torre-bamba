@@ -28,7 +28,7 @@
 
 ## Detalhes do jogo
 
-- Ajudas: a 3ª, 7ª, 11ª... peça vem com 🪨 pedra (fica presa onde encostar) ou 🌿 planta
+- Ajudas: a 3ª, 7ª, 11ª... peça vem com 🪨 pedra (fica presa onde encostar, estática; o Lucas prefere assim mesmo que possa ficar "flutuando") ou 🌿 planta
   (vira um corpo só com a peça em que encostar). O sorteio sai da semente, igual pra todos.
 - Peça caída não elimina ninguém. Tema claro/escuro usa a mesma chave do Forma Palavras (`cp_tema`).
 - Fora do github.io (ex.: prévia como artefato do Claude) o jogo entra em modo "prévia": só treino.
