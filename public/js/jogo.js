@@ -21,7 +21,7 @@ const SEGURAR = 3000;
 const QUEDA = 1.6 * CEL, QUEDA_RAPIDA = 11 * CEL; // px por segundo
 // física: gravidade mais forte (o padrão deixa tudo "flutuando") e passos menores (menos tremedeira)
 const GRAVIDADE = 0.0019, SUBPASSOS = 3;
-const INERCIA = 1.6; // >1 = peça mais "pesada" pra tombar/girar
+const INERCIA = 1.25; // >1 = peça mais "pesada" pra tombar/girar (1.6 ficou fácil demais)
 
 const PECAS = {
   I: { c: [[0, 0], [1, 0], [2, 0], [3, 0]], cor: '#3ad1ff' },
@@ -329,7 +329,7 @@ function passo(dt) {
     // amortece giro e tremidinhas pequenas (deixa a torre menos "nervosa")
     for (const p of J.pecas) {
       if (p.isStatic || p.isSleeping) continue;
-      if (Math.abs(p.angularVelocity) < 0.03) Body.setAngularVelocity(p, p.angularVelocity * 0.9);
+      if (Math.abs(p.angularVelocity) < 0.02) Body.setAngularVelocity(p, p.angularVelocity * 0.93);
     }
   }
   // peças que caíram da plataforma
