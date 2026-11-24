@@ -744,7 +744,7 @@ function desenharFim() {
   $('btnDeNovo').hidden = !M.host; $('fimEspera').hidden = M.host;
 }
 
-// XP vai pro mesmo nível do Forma Palavras
+// XP vai pro mesmo nível do boneco (o perfil é um só pra todos os jogos)
 async function ganharXP(n) {
   if (!PERFIL.tag || !rede.conectado()) return;
   try {
@@ -780,10 +780,37 @@ $('btnFimSair').onclick = () => { if (M.code) sairSala(); else { J = null; fase 
 // ---------- início ----------
 function desenharEu() {
   const svg = bonecoSVG(PERFIL.look, 56);
-  $('eu').innerHTML = PERFIL.tag ? `<div class="rosto">${svg || '🙂'}</div><div><b>${esc(PERFIL.tag)}</b><small>seu boneco do Forma Palavras</small></div>` : '';
+  $('eu').innerHTML = PERFIL.tag ? `<div class="rosto">${svg || '🙂'}</div><div><b>${esc(PERFIL.tag)}</b><small>seu boneco · toque pra personalizar ✏️</small></div>` : '';
   $('eu').hidden = !PERFIL.tag;
   $('nome').hidden = !!PERFIL.tag;
+  $('btnBoneco').hidden = !!PERFIL.tag;
 }
+// a tela de personalizar é a MESMA do portal e dos outros jogos (forma-palavras/js/boneco-editor.js):
+// o boneco é um só, mudou aqui muda em todos
+async function personalizar() {
+  let ed = null;
+  try { ed = await import(new URL('../../forma-palavras/js/boneco-editor.js', import.meta.url).href); }
+  catch { try { ed = await import('./boneco-editor.js'); } catch {} } // a prévia leva uma cópia
+  if (!ed) { toast('Não consegui abrir agora 😕 Confere a internet?', 2600); return; }
+  if (!PREVIA) try { await rede.conectar(); } catch {}
+  const r = await ed.abrirEditorBoneco({
+    perfil: { ...PERFIL, tag: PERFIL.tag || $('nome').value.trim() }, pedirNome: !PERFIL.tag,
+    salvar: async ({ look, tag }) => {
+      if (rede.conectado()) {
+        if (tag && tag !== PERFIL.tag && !(await rede.reservarTag(tag, PERFIL.tag))) return 'Esse nome já tem dono 😬 Tenta outro';
+        await rede.salvarPerfil(tag ? { look, tag } : { look });
+      }
+      PERFIL = { ...PERFIL, look, tag: tag || PERFIL.tag };
+      return null;
+    },
+  });
+  if (!r) return;
+  desenharEu();
+  if (M.code) rede.atualizarEu(M.code, publico()).catch(() => {});
+  toast('Boneco salvo! Vale em todos os jogos ✨', 2400);
+}
+$('eu').onclick = () => personalizar();
+$('btnBoneco').onclick = () => personalizar();
 async function iniciar() {
   try { $('nome').value = localStorage.getItem('tb-nome') || ''; } catch {}
   mostrar('telaInicio');

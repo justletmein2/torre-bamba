@@ -133,3 +133,8 @@ input { font: inherit; font-size: 17px; padding: 11px; border-radius: 12px; bord
   color: #fff; background: rgba(255,255,255,.16); border: 2px solid rgba(255,255,255,.45); box-shadow: 0 4px 0 rgba(0,0,0,.22);
   -webkit-tap-highlight-color: transparent; }
 .voltarHub:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,.22); }
+
+/* boneco do jogador: toca pra personalizar (tela compartilhada com todos os jogos) */
+.menu .eu { cursor: pointer; }
+.menu .eu:active { transform: translateY(2px); }
+#btnBoneco { background: rgba(255,255,255,.92); box-shadow: 0 4px 0 rgba(0,0,0,.3); }
