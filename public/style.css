@@ -138,3 +138,13 @@ input { font: inherit; font-size: 17px; padding: 11px; border-radius: 12px; bord
 .menu .eu { cursor: pointer; }
 .menu .eu:active { transform: translateY(2px); }
 #btnBoneco { background: rgba(255,255,255,.92); box-shadow: 0 4px 0 rgba(0,0,0,.3); }
+
+/* título: TORRE em cima de BAMBA, balançando como a torre do jogo (fonte Luckiest Guy) */
+.menu h1.titulo-bambo { font-family: "Luckiest Guy", Nunito, sans-serif; font-weight: 400; display: flex; flex-direction: column; align-items: center;
+  transform-origin: 50% 100%; animation: bambaTorre 2.6s ease-in-out infinite; letter-spacing: 2px; line-height: .95; font-size: min(50px, 13vw); margin-top: -6px; }
+.menu h1.titulo-bambo .tl { display: flex; color: #fff; text-shadow: 3px 3px 0 var(--rosa), 0 7px 0 rgba(0,0,0,.25); animation: none; transform: none; }
+.menu h1.titulo-bambo .l2 { color: var(--amarelo); text-shadow: 3px 3px 0 var(--roxo-esc), 0 7px 0 rgba(0,0,0,.25); }
+.menu h1.titulo-bambo .tl span { display: inline-block; color: inherit; text-shadow: inherit; animation: tremelique 2.6s ease-in-out infinite; animation-delay: calc(var(--i) * -.3s); }
+@keyframes bambaTorre { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+@keyframes tremelique { 0%, 100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(4deg) translateY(-2px); } }
+@media (prefers-reduced-motion: reduce) { .menu h1.titulo-bambo, .menu h1.titulo-bambo .tl span { animation: none; } }
